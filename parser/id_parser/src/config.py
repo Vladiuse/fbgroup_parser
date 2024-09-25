@@ -7,5 +7,6 @@ load_dotenv()
 
 class Config(BaseSettings):
     NEW_URLS_FILE_PATH: str
+    MAX_REQUEST_ERROR_ROW_COUNT: int
 
 config = Config()
