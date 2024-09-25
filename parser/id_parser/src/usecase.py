@@ -21,6 +21,10 @@ class ParseFbGroupsIdsUseCase:
         )
         collector.collect(items=groups_to_parse)
 
+        # end
+        not_parsed_groups = FbGroupModel.objects.filter(group_id__isnull=True).count()
+        logging.info('Groups without ids in db: %s', not_parsed_groups)
+
     def __get_groups_to_parse_ids(self) -> list[FbGroupModel]:
         groups_to_parse = list(FbGroupModel.objects.filter(group_id__isnull=True).order_by('?'))
         if len(groups_to_parse) == 0:
