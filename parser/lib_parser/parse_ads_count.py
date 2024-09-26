@@ -1,7 +1,8 @@
-import json
-from dataclasses import dataclass
-from id_parser.src.request_sender import FbRequestRequestSender
-from lib_parser.src.dto import FbLibAuthData
+import logging
+
+from lib_parser.src.provider import AuthParamsProvider, AdsCountProvider
+from lib_parser.src.convertor import FbAdsLibPageConverter, CardsAdsCountConverter
+from common.request_sender import FbRequestRequestSender
 
 COOKIES = {
     'wd': '1325x939',
@@ -28,92 +29,22 @@ HEADERS = {
 }
 
 START_URL = 'https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BY&media_type=all&q=some&search_type=keyword_unordered'
-
-
-
-
-
-
-@dataclass
-class AuthParamsProvider:
-    request_sender: FbRequestRequestSender
-    page_converter: FbAdsLibPageConverter
-
-    def provide(self) -> FbLibAuthData:
-        start_url = START_URL
-        html = self.request_sender.get(url=start_url, headers=HEADERS, cookies=COOKIES)
-        auth_params = self.page_converter.convert(html=html)
-        print(auth_params)
-        cookies = COOKIES
-        headers = HEADERS
-        cookies.update({
-            'datr': auth_params['datr']
-        })
-        headers.update(
-            {
-                'origin': 'https://www.facebook.com',
-                'referer': START_URL,
-                'content-type': 'application/x-www-form-urlencoded'
-            })
-        data = {
-            '__aaid': '0',
-            '__user': '0',
-            '__a': '1',
-            '__req': '2',
-            '__hs': auth_params['hs'],
-            'dpr': '2',
-            '__ccg': 'EXCELLENT',
-            '__rev': auth_params['rev'],
-            '__hsi': auth_params['hsi'],
-            'lsd': auth_params['lsd'],
-            '__spin_r': auth_params['spin_r'],
-            '__spin_b': auth_params['spin_b'],
-            '__spin_t': auth_params['spin_t'],
-        }
-        return FbLibAuthData(
-            cookies=cookies,
-            headers=headers,
-            data=data,
-            session_id=auth_params['session_id'],
-        )
-
-
-
-@dataclass
-class AdsCountProvider:
-    request_sender: FbRequestRequestSender
-    auth_params_provider: AuthParamsProvider
-    ads_count_converter: CardsAdsCountConverter
-
-    def provide(self, group_id: str):
-        auth_params = self.auth_params_provider.provide()
-        param_string = f'active_status=active&ad_type=all&country=ALL&media_type=all&search_type=page&source=page-transparency-widget&start_date[min]=2024-09-26&start_date[max]&view_all_page_id={group_id}'
-        cards_url = f'https://www.facebook.com/ads/library/async/search_ads/?session_id={auth_params.session_id}&count=30&{param_string}'
-        res_text = self.request_sender.post(
-            url=cards_url,
-            headers=auth_params.headers,
-            cookies=auth_params.cookies,
-            data=auth_params.data,
-        )
-        print(res_text)
-        ads_count = self.ads_count_converter.convert(json_string=res_text)
-        print(ads_count)
-
-
-
-
+logging.basicConfig(level=logging.INFO)
 auth_provider = AuthParamsProvider(
     request_sender=FbRequestRequestSender(),
-    page_converter=FbAdsLibPageConverter()
+    page_converter=FbAdsLibPageConverter(),
+    fbads_lib_start_url=START_URL,
+    base_headers=HEADERS,
+    base_cookies=COOKIES,
 )
 provider = AdsCountProvider(
     request_sender=FbRequestRequestSender(),
     auth_params_provider=auth_provider,
-    ads_count_converter=CardsAdsCountConverter()
+    ads_count_converter=CardsAdsCountConverter(),
 )
 
-provider.provide(group_id='198566486907133')
-
+group_ads_count = provider.provide(group_id='198566486907133')
+print(group_ads_count)
 
 class AdsCountCollector:
     pass

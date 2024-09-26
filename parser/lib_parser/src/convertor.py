@@ -1,7 +1,10 @@
+import logging
+import json
+
 class FbAdsLibPageConverter:
 
     def convert(self, html: str) -> dict:
-        result = dict()
+        page_auth_params = dict()
         params_from_search = {
             'datr': ['"_js_datr":{"value":"', '"'],
             'session_id': ['sessionId":"', '"'],
@@ -18,12 +21,13 @@ class FbAdsLibPageConverter:
                 start = html.index(search[0]) + len(search[0])
                 end = html.index(search[1], start)
                 param_value = html[start: end]
-                result.update({
+                page_auth_params.update({
                     param_key: param_value
                 })
             except ValueError:
                 raise ValueError(param_key, 'параметр не найден')
-        return result
+        logging.debug('Page auth params:\n %s', page_auth_params)
+        return page_auth_params
 
 
 class CardsAdsCountConverter:
