@@ -1,6 +1,6 @@
 from .dto import FbGroup
 from .fbgroup_page_converter import PageConverter
-from ..request_sender import FbRequestRequestSender
+from common.request_sender import FbRequestRequestSender
 
 HEADERS = {
     'authority': 'www.facebook.com',

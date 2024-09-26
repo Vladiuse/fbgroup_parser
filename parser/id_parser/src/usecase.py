@@ -1,9 +1,9 @@
 import logging
 from fb.models import FbGroup as FbGroupModel
-from .exceptions import NoGroupsToParse
+from id_parser.src.exceptions import NoGroupsToParse
 from .fbgroup.fbgroup_page_provider import FbPageProvider
 from .fbgroup.fbgroup_page_converter import PageConverter
-from .request_sender import FbRequestRequestSender
+from common.request_sender import FbRequestRequestSender
 from .fbgroup.fbgroup_page_collector import FbGroupIdsCollector
 
 

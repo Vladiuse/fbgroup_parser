@@ -1,5 +1,5 @@
 from .dto import FbGroup
-from ..exceptions import HtmlElementNotFound
+from id_parser.src.exceptions import HtmlElementNotFound
 
 class PageConverter:
 

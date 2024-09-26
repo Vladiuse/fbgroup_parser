@@ -1,4 +1,4 @@
-from id_parser.src.config import config
+from common.config import config
 import logging
 
 

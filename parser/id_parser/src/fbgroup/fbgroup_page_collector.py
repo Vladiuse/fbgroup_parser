@@ -2,9 +2,9 @@ import logging
 from fb.models import FbGroup as FbGroupModel
 from dataclasses import dataclass
 from requests.exceptions import RequestException
-from ..exceptions import MaxRowErrorCount, HtmlElementNotFound
+from id_parser.src.exceptions import MaxRowErrorCount, HtmlElementNotFound
 from .fbgroup_page_provider import FbPageProvider
-from ..config import config
+from common.config import config
 
 
 @dataclass
