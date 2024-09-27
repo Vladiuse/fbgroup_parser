@@ -1,10 +1,9 @@
-import logging
-
 from lib_parser.src.fb_adslib.collector import FbGroupsAdsCountCollector
 from lib_parser.src.fb_adslib.provider import AuthParamsProvider, AdsCountProvider
 from lib_parser.src.fb_adslib.convertor import FbAdsLibPageConverter, CardsAdsCountConverter
 from common.request_sender import FbRequestRequestSender
-from lib_parser.src.utils import get_groups_for_parse_ads_count
+from fb.models import FbGroup as FbGroupModel
+from dataclasses import dataclass
 
 COOKIES = {
     'wd': '1325x939',
@@ -49,10 +48,9 @@ collector = FbGroupsAdsCountCollector(
     ads_count_provider=ads_count_provider,
 )
 
-
+@dataclass
 class ParseGroupsAdsCountUseCase():
+    groups_to_parse: list[FbGroupModel]
 
     def parse(self):
-        groups_to_parse = list(get_groups_for_parse_ads_count())
-        logging.info('Groups to parse: %s', len(groups_to_parse))
-        collector.collect(groups=groups_to_parse)
+        collector.collect(groups=self.groups_to_parse)

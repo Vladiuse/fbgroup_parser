@@ -25,6 +25,6 @@ class FbGroupsAdsCountCollector:
             group_ads_count = self.ads_count_provider.provide(group_request=group_request, auth_params=auth_params)
             group.ads_count = group_ads_count
             group.save()
-            string = f'{num}/{len(groups)} {group.url :<50} id:{group.group_id: <16} ads_count: {group_ads_count}'
+            string = f'{num:>4}/{len(groups):<4} {group.url :<50} id:{group.group_id: <16} ads_count: {group_ads_count}'
             logging.info(string)
             sleep(config.ADSLIB_SLEEP_REQS)
