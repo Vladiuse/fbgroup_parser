@@ -56,9 +56,9 @@ class AdsCountProvider:
     auth_params_provider: AuthParamsProvider
     ads_count_converter: CardsAdsCountConverter
 
-    def provide(self, group_request: FbLibGroupAdsCountRequest) -> int:
+    def provide(self, group_request: FbLibGroupAdsCountRequest, auth_params: FbLibAuthData) -> int:
         start_time = group_request.start_date.strftime('%Y-%m-%d')
-        auth_params = self.auth_params_provider.provide()
+
         param_string = f'active_status={group_request.ads_status.value}&ad_type=all&country=ALL&media_type=all&search_type=page&source=page-transparency-widget&start_date[min]={start_time}&start_date[max]&view_all_page_id={group_request.group_id}'
         cards_url = f'https://www.facebook.com/ads/library/async/search_ads/?session_id={auth_params.session_id}&count=30&{param_string}'
         logging.debug(cards_url)
