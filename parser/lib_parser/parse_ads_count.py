@@ -3,7 +3,9 @@ import logging
 from lib_parser.src.provider import AuthParamsProvider, AdsCountProvider
 from lib_parser.src.convertor import FbAdsLibPageConverter, CardsAdsCountConverter
 from common.request_sender import FbRequestRequestSender
-
+from lib_parser.src.dto import FbLibGroupAdsCountRequest
+from lib_parser.src.types import AdsStatus
+from datetime import date
 COOKIES = {
     'wd': '1325x939',
 }
@@ -43,8 +45,15 @@ provider = AdsCountProvider(
     ads_count_converter=CardsAdsCountConverter(),
 )
 
-group_ads_count = provider.provide(group_id='198566486907133')
-print(group_ads_count)
+group_req = FbLibGroupAdsCountRequest(
+    group_id='254771537723101',
+    start_date=date(2024, 1, 1),  # 1/1/2024
+    ads_status=AdsStatus.active,
+)
+print(group_req)
+
+group_ads_count = provider.provide(group_request=group_req)
+print('group_ads_count', group_ads_count)
 
 class AdsCountCollector:
     pass

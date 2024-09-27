@@ -1,5 +1,6 @@
 import logging
 import json
+from .exceptions import EmptyPayload
 
 class FbAdsLibPageConverter:
 
@@ -25,7 +26,7 @@ class FbAdsLibPageConverter:
                     param_key: param_value
                 })
             except ValueError:
-                raise ValueError(param_key, 'параметр не найден')
+                raise ValueError(f'Param {param_key} not found')
         logging.debug('Page auth params:\n %s', page_auth_params)
         return page_auth_params
 
@@ -35,4 +36,6 @@ class CardsAdsCountConverter:
     def convert(self, json_string: str) -> int:
         json_string = json_string.replace('for (;;);', '')
         data = json.loads(json_string)
+        if 'payload' not in data:
+            raise EmptyPayload(str(data))
         return data['payload']['totalCount']
