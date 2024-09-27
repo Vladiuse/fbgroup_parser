@@ -1,6 +1,6 @@
 import logging
 import json
-from .exceptions import EmptyPayload
+from lib_parser.src.exceptions import EmptyPayload
 
 class FbAdsLibPageConverter:
 
