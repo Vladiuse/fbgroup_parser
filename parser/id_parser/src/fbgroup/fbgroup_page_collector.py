@@ -15,25 +15,20 @@ class FbGroupIdsCollector:
         self.__errors_count = 0
 
     def collect(self, items: list[FbGroupModel]) -> None:
-        for i, item in enumerate(items):
+        for i, group in enumerate(items):
             try:
-                logging.info(item.url)
-                group = self.page_provider.provide(url=item.url)
-                item.group_id = group.group_id
-                item.save()
-                logging.info('%s:%s, id: %s', f'{i}/{len(items)}', item.url, item.group_id)
-                self.reset_error()
+                logging.info(group.url)
+                group = self.page_provider.provide(url=group.url)
+                group.group_id = group.group_id
+                group.save()
+                logging.info('%s:%s, id: %s', f'{i}/{len(items)}', group.url, group.group_id)
+                self.__errors_count = 0
             except (RequestException, HtmlElementNotFound) as error:
-                logging.error(str(error))
-                self.up_error()
+                error_msg = f'{type(error)}, url:{group.url}'
+                logging.error(error_msg)
+                self.__errors_count += 1
+                if self.__errors_count == config.MAX_REQUEST_ERROR_ROW_COUNT:
+                    self.__errors_count = 0
+                    break
 
-    def up_error(self):
-        self.__errors_count += 1
-        self.__check_errors()
 
-    def reset_error(self):
-        self.__errors_count = 0
-
-    def __check_errors(self):
-        if self.__errors_count == config.MAX_REQUEST_ERROR_ROW_COUNT:
-            raise MaxRowErrorCount
