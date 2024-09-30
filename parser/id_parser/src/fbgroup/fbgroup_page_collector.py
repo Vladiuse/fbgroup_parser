@@ -24,7 +24,7 @@ class FbGroupIdsCollector:
                 logging.info('%s:%s, id: %s', f'{i}/{len(items)}', group.url, group.group_id)
                 self.__errors_count = 0
             except HtmlElementNotFound:
-                continue
+                logging.error('HtmlElementNotFound')
             except RequestException as error:
                 error_msg = f'RequestException:{error}, \nurl:{group.url}'
                 logging.error(error_msg)
