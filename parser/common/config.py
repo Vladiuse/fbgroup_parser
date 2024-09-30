@@ -13,6 +13,6 @@ class Config(BaseSettings):
     START_DATE: date
     ADS_STATUS: AdsStatus
     ADSLIB_SLEEP_REQS: float
-
+    OUTPUT_FILE_PATH: str
 
 config = Config()
