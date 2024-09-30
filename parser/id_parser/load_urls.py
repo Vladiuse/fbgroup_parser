@@ -11,11 +11,14 @@ new_urls = get_new_urls()
 errors_count = 0
 total_created = 0
 for url in new_urls:
-    try:
-        FbGroup.objects.create(url=url)
-        total_created += 1
-    except IntegrityError:
-        errors_count += 1
+    if url.startswith('https:'):
+        try:
+            FbGroup.objects.create(url=url)
+            total_created += 1
+        except IntegrityError:
+            errors_count += 1
+    else:
+        logging.info('Incorrect url: %s', url)
 logging.info('Created %s, with error %s', total_created, errors_count)
 
 
