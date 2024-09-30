@@ -23,12 +23,14 @@ class FbGroupIdsCollector:
                 group.save()
                 logging.info('%s:%s, id: %s', f'{i}/{len(items)}', group.url, group.group_id)
                 self.__errors_count = 0
-            except (RequestException, HtmlElementNotFound) as error:
-                error_msg = f'{type(error)}, url:{group.url}'
+            except HtmlElementNotFound:
+                continue
+            except RequestException as error:
+                error_msg = f'RequestException:{error}, \nurl:{group.url}'
                 logging.error(error_msg)
                 self.__errors_count += 1
-                if self.__errors_count == config.MAX_REQUEST_ERROR_ROW_COUNT:
+                if self.__errors_count >= config.MAX_REQUEST_ERROR_ROW_COUNT:
                     self.__errors_count = 0
-                    break
+                    continue
 
 
