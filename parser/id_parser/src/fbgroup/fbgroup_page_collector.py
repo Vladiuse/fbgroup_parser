@@ -18,8 +18,8 @@ class FbGroupIdsCollector:
         for i, group in enumerate(items):
             try:
                 logging.info(group.url)
-                group = self.page_provider.provide(url=group.url)
-                group.group_id = group.group_id
+                group_dto = self.page_provider.provide(url=group.url)
+                group.group_id = group_dto.group_id
                 group.save()
                 logging.info('%s:%s, id: %s', f'{i}/{len(items)}', group.url, group.group_id)
                 self.__errors_count = 0
