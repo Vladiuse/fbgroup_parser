@@ -1,5 +1,5 @@
 import logging
-from id_parser.src.config import config
+from common.config import config
 from fb.models import FbGroup
 from id_parser.src.utils import get_new_urls
 from django.db import IntegrityError
