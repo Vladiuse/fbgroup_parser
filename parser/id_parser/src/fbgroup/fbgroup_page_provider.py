@@ -5,7 +5,7 @@ from common.request_sender import FbRequestRequestSender
 HEADERS = {
     'authority': 'www.facebook.com',
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-    'accept-language': 'uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7',
+    'accept-language': 'en-US,en;q=0.5',
     'dpr': '2',
     'sec-ch-prefers-color-scheme': 'dark',
     'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
