@@ -16,21 +16,24 @@ class FbGroupIdsCollector:
 
     def collect(self, items: list[FbGroupModel]) -> None:
         for i, group in enumerate(items):
+            if self.__errors_count >= config.MAX_REQUEST_ERROR_ROW_COUNT:
+                break
             try:
-                logging.info(group.url)
                 group_dto = self.page_provider.provide(url=group.url)
                 group.group_id = group_dto.group_id
+                group.likes_count = group_dto.likes_count
+                group.followers_count = group_dto.followers_count
                 group.save()
-                logging.info('%s:%s, id: %s', f'{i}/{len(items)}', group.url, group.group_id)
+                log_string = f'{i:>4}/{len(items)}, {group.url:<50}\n{group_dto}'
+                logging.info(log_string)
                 self.__errors_count = 0
-            except HtmlElementNotFound:
-                logging.error('HtmlElementNotFound')
+            except HtmlElementNotFound as error:
+                logging.error('%s\nHtmlElementNotFound: %s', group.url, error)
+                self.__errors_count += 1
             except RequestException as error:
-                error_msg = f'RequestException:{error}, \nurl:{group.url}'
+                error_msg = f'RequestException: {error},\nUrl: {group.url}'
                 logging.error(error_msg)
                 self.__errors_count += 1
-                if self.__errors_count >= config.MAX_REQUEST_ERROR_ROW_COUNT:
-                    self.__errors_count = 0
-                    continue
+
 
 
