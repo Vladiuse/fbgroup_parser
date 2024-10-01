@@ -34,7 +34,7 @@ class PageConverter:
             return convert_to_int(string=followers_string)
         with open('x.html', 'w') as file:
             file.write(html)
-        return HtmlElementNotFound('followers not found')
+        raise HtmlElementNotFound('followers not found')
 
     def __get_likes_count(self, html: str) -> int | None:
         res = re.search(r'"text":"[\d.]{1,6}[KkMm]? likes"', html)
