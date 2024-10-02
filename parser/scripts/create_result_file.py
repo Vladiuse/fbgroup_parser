@@ -12,6 +12,6 @@ qs_followers_count = FbGroupModel.objects.filter(followers_count__isnull=False).
 qs = qs_followers_count
 logging.info('groups to write: %s', len(qs))
 confirm_action()
-
-FollowersLikesCountResultFile().create(groups=list(qs))
+groups_len = int(input('Set len of groups: '))
+FollowersLikesCountResultFile().create(groups=list(qs[:groups_len]))
 qs.update(is_used=True)
