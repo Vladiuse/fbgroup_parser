@@ -13,5 +13,6 @@ qs = qs_followers_count
 logging.info('groups to write: %s', len(qs))
 confirm_action()
 groups_len = int(input('Set len of groups: '))
-FollowersLikesCountResultFile().create(groups=list(qs[:groups_len]))
-qs.update(is_used=True)
+qs = qs[:groups_len]
+FollowersLikesCountResultFile().create(groups=list(qs))
+print(qs.update(is_used=True))
